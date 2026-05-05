@@ -3,6 +3,9 @@ li{
     margin: 5px 0;
     
 }
+li.a{
+    color: brown;
+}
 li:hover{
     background-color: aliceblue;
     display: inline-block;/* le background-color s'adapte au texte */
@@ -32,7 +35,7 @@ img{
 }
 ul{
     list-style-type: none;/* enlever le point au debut de l'urls */
-    color: red;
+
 
 }
 ul a{
