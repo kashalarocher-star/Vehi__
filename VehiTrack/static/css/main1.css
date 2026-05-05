@@ -41,7 +41,7 @@ ul{
 ul a{
     text-decoration: none;/*enlever le soulignement*/
 }
-noir{
+section{
     background-color: rgb(26, 3, 76);
     color: aliceblue;
     text-align: center;
