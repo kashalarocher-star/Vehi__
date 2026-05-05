@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Détails du Matricule</title>
+</head>
+<body>
+    
+    {% block title %}Détail Matricule{% endblock %}
+    {% block content %}
+    <h2>Matricule : {{ matricule.code }} - {{ matricule.nom }}</h2>
+    <h3>Documents associés</h3>
+    <ul class="list-group">
+        {% for doc in documents %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ doc.titre }} (créé le {{ doc.date_creation }})
+                <span>
+                    <a href="{% url 'historique_document' doc.id %}" class="btn btn-sm btn-info">Voir historique</a>
+                    <a href="{% url 'supprimer_document' doc.id %}" class="btn btn-sm btn-danger">Supprimer</a>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'ajouter_document' matricule.id %}" class="btn btn-success mt-3">Ajouter un document</a>
+    {% endblock %}
+</body>
+</html>

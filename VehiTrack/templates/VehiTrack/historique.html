@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historique du Document</title>
+</head>
+<body>
+    
+
+    {% block title %}Historique Document{% endblock %}
+
+    {% block content %}
+    <div class="container mt-4">
+        <h1 class="text-primary">Historique du document : {{ document.titre }}</h1>
+
+        <!-- Affichage de l'image associée -->
+        {% if document.image %}
+            <div class="mb-3">
+                <img src="{{ document.image.url }}" alt="{{ document.titre }}" class="img-thumbnail" width="300">
+            </div>
+        {% endif %}
+
+        <!-- Tableau Bootstrap -->
+        <table class="table2">
+            <thead class="table-dark">
+                <tr>
+                    <th>Action</th>
+                    <th>Utilisateurs</th>
+                    <th>Date</th>
+                    <th>Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in historiques %}
+                <tr>
+                    <td>{{ h.action }}</td>
+                    <td>{{ h.utilisateur }}</td>
+                    <td>{{ h.date_action }}</td>
+                    <td>{{ h.details }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Aucun historique disponible.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'detail_matricule' document.matricule.id %}" class="btn btn-secondary mt-3">Retour</a>
+    </div>
+    {% endblock %}
+</body>
+</html>

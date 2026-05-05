@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Matricules</title>
+    
+</head>
+<body>
+    
+    
+    {% block content %}
+    <h2 class="text-primary">Liste des matricules</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in matricules %}
+            <tr>
+                <td>{{ m.code }}</td>
+                <td>{{ m.nom }}</td>
+                <td>
+                    <a href="{% url 'detail_matricule' m.id %}" class="btn btn-sm btn-info">Voir détails</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}
+</body>
+</html>

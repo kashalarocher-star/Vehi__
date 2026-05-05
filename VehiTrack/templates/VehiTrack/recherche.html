@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recherche par Matricule</title>
+</head>
+<body>
+    
+
+    {% block title %}Recherche{% endblock %}
+    
+    {% block content %}
+  
+    <h1 class="text-primary">Recherche de documents par matricule</h1>
+
+    <form method="post" class="row g-3">
+        {% csrf_token %}
+        <div class="col-auto">
+            <input type="text" name="matricule" class="form-control" placeholder="Entrez le matricule">
+        </div>
+        
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success">Rechercher</button>
+        </div>
+    </form>
+
+    {% if matricule_code %}
+        <h2 class="mt-4">Résultats pour {{ matricule_code }}</h2>
+        {% if documents %}
+            <ul class="list-group">
+                {% for doc in documents %}
+                    <li class="list-group-item">
+                        {{ doc.titre }} (créé le {{ doc.date_creation }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-warning mt-3">
+                Aucun document trouvé pour ce matricule.
+            </div>
+        {% endif %}
+    {% endif %}
+    {% endblock %}
+</body>
+</html>
+
+
+
+
