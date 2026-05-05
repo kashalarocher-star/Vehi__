@@ -32,6 +32,7 @@ img{
 }
 ul{
     list-style-type: none;/* enlever le point au debut de l'urls */
+    color: red;
 
 }
 ul a{
@@ -44,5 +45,5 @@ noir{
     font-family: sans-serif;
 }
 Bas_Page{
-    
+
 }
