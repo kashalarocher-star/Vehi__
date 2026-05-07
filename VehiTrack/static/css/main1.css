@@ -9,7 +9,7 @@ li.a{
 li:hover{
     background-color: aliceblue;
     display: inline-block;/* le background-color s'adapte au texte */
-    transform: translateX(5px);/* faire apparaitre la ligne lors du survole */
+    /*transform: translateX(5px);/* faire apparaitre la ligne lors du survole */
     /*border-radius: 20px;
 }
 
