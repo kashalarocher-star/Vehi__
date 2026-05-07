@@ -1,0 +1,164 @@
+/*li{
+    padding: auto;
+    margin: 5px 0;
+    
+}
+li.a{
+    color: brown;
+}
+li:hover{
+    background-color: aliceblue;
+    display: inline-block;/* le background-color s'adapte au texte */
+    /*transform: translateX(5px);/* faire apparaitre la ligne lors du survole */
+    /*border-radius: 20px;
+}
+
+
+h1{
+    background-color: rgb(176, 29, 161);
+    border-radius: 10px;
+    color: rgb(55, 164, 164);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 700;
+}
+
+body{
+    background-color: rgb(197, 216, 231);
+    text-align: center;
+    
+}
+img{
+    margin: 0%;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+ul{
+    list-style-type: none;/* enlever le point au debut de l'urls */
+
+
+/*}
+ul a{
+    text-decoration: none;/*enlever le soulignement*/
+/*}
+section{
+    background-color: rgb(26, 3, 76);
+    color: aliceblue;
+    text-align: center;
+    font-family: sans-serif;
+}*/
+/* RESET & BASE */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #fafafa;
+}
+
+/* == BARRE D'ÉTAT (HAUT) == */
+.status-bar {
+    background-color: #2c3e50;    /* fond foncé élégant */
+    padding: 0.8rem 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.btn-status {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 40px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-status:hover {
+    background-color: #2980b9;
+    transform: scale(1.02);
+}
+
+/* Contenu principal  */
+.main-content {
+    flex: 1;
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.main-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1e2a3a;
+}
+
+.main-content p {
+    line-height: 1.5;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+/* == SECTION NOIRE BAS DE PAGE == */
+.cta-noir {
+    background-color: #000000;   /* noir pur */
+    color: #ffffff;
+    padding: 4rem 2rem;
+    text-align: center;
+    width: 100%;
+    margin-top: auto;            /* colle en bas */
+    font-family: sans-serif;
+}
+
+.conteneur {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-noir h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-noir p {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.bouton {
+    display: inline-block;
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 40px;
+    transition: 0.3s;
+}
+.bouton:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
