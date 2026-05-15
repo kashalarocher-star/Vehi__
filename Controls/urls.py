@@ -17,11 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from VehiTrack import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('VehiTrack.urls')),
     path('', views.index, name='index'),
+    path('', views.redirection_apres_connexion, name='accueil'),
+    path('inscription/', views.inscription, name='inscription'),
+    path("connexion/", auth_views.LoginView.as_view(template_name='vehiTrack/connexion.html'), name="login"),
+    path("deconnexion/", auth_views.LoginView.as_view(next_page='acceuil'), name="logout"),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('recherche/', views.rechercher_documents, name='rechercher_documents'),
     path('matricules/', views.liste_matricules, name='liste_matricules'),
     path('matricule/<int:matricule_id>/', views.detail_matricule, name='detail_matricule'),

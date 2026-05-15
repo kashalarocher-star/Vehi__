@@ -120,3 +120,5 @@ STATIC_URL = 'VehiTrack/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'Controls/static')
 ]
+LOGIN_URL = '/connexion'
+LOGIN_REDIRECT_URL = '/'

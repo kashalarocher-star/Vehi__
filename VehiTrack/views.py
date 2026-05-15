@@ -1,9 +1,81 @@
 from django.shortcuts import render,get_object_or_404, redirect
 
 # Create your views here.
+from django.shortcuts import redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
-from VehiTrack.models import Matricule, Document, HistoriqueDocument
+from django.contrib.auth.views import LoginView, LogoutView
+from datetime import date, timedelta
+from .models import Matricule, Document, HistoriqueDocument
+from .forms import InscriptionForm
 
+def est_admin(user):
+    return user.is_authenticated and user.is_staff
+
+def inscription(request):
+    if request.method == 'POST':
+        form = InscriptionForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return render('dashboard')
+# si j veux qu'elle s'affiche sur la page inscription donc je pourrais la modifier la mettre sur index
+    else:
+        form = InscriptionForm()
+    return render(request, 'VehiTrack/inscription.html', {'form': form})
+@user_passes_test(est_admin, login_url='/', redirect_field_name=None)
+def dashboard(request):
+    aujourdhui = date.today()
+    date_limite = aujourdhui + timedelta(days=30)
+    # Recuperation des vehicule et leur dernier document
+    vehicules_data = []
+    for mat in Matricule.objects.all():
+        dernier_doc = mat.documents.order_by('date_creation').first()
+        if dernier_doc:
+            doc_info = f"{dernier_doc.get_type_document_display()} {dernier_doc.date_expiration.strftime('%d%m/%Y') if dernier_doc.date_expiration else 'Date inconnue'}"
+            statut = dernier_doc.statut
+        else:
+            doc_info = "Aucun document"
+            statut = 'aucun'
+        vehicules_data.append({
+            'matricule': mat.code,
+            'vehicule': mat.nom,
+            'type': 'vehicule',
+            'dernier_document': doc_info,
+            'statut': statut,
+        })
+
+    # 5 derniers documets ajouter
+    doc_recents = Document.objects.select_related('matricule').order_by('-date_creation')[:5]
+
+    #Document qui expire dans 30jours
+    docs_expirant = Document.objects.filter(
+        date_expiration__gte=aujourdhui,
+        date_expiration__lte=date_limite
+    ).select_related('matricule').order_by('date_expiration')
+
+    total_expirations_30j = docs_expirant.count()
+    assurance_count = docs_expirant.filter(type_document='assurence').count()
+    visite_count = docs_expirant.filter(type_document='visite_technique').count()
+    carte_count = docs_expirant.filter(type_document=' carte_grise').count()
+    autres_count = docs_expirant.filter(type_document='autre').count()
+
+    context = {
+        'vehicules': vehicules_data,
+        'documents_recents': doc_recents,
+        'documents_expirant': doc_recents[:5],
+        'total_expirations': total_expirations_30j,
+        'assurance_count': assurance_count,
+        'visite_count': visite_count,
+        'carte_count': carte_count,
+        'autres_count':autres_count,
+        'aujourdhui': aujourdhui,
+
+    }
+    return render(request, 'vehiTrack/dashboard.html', context)
+
+# liste mat(pour tout le utilisateur connectés)
 
 def index(request):
     return render(request, "VehiTrack/index.html")
@@ -20,6 +92,11 @@ def detail_matricule(request, matricule_id):
 
 # Ajouter un document
 @login_required
+def redirection_apres_connexion(request):
+    if request.user.is_staff:
+        return redirect('dashboard')
+    else:
+        return redirect('liste_matricules')
 def ajouter_document(request, matricule_id):
     matricule = get_object_or_404(Matricule, id=matricule_id)
     if request.method == "POST":

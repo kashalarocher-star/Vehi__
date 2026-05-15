@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VehiTrack - Tableau de bord</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+<div class="sidebar">
+    <div class="sidebar-header"><h2><i class="fas fa-folder-tree"></i> VehiTrack</h2><p>Gestion flotte</p></div>
+    <div class="nav-menu">
+        <a href="{% url 'dashboard' %}"><div class="nav-item active"><i class="fas fa-tachometer-alt"></i> Tableau de bord</div></a>
+        <a href="{% url 'liste_matricules' %}"><div class="nav-item"><i class="fas fa-truck-moving"></i> Matricules</div></a>
+        <div class="nav-divider"></div>
+        <a href="{% url 'logout' %}"><div class="nav-item"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></a>
+    </div>
+</div>
+<div class="main-content">
+    <div class="page-header">
+        <h1><i class="fas fa-chalkboard-user"></i> Tableau de bord administrateur</h1>
+        <p>Connecté en tant que <strong>{{ user.username }}</strong>
+           {% if user.is_superuser %} (Super administrateur)
+           {% elif user.is_staff %} (Administrateur)
+           {% else %} (Utilisateur standard)
+           {% endif %}
+        </p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-title">DANS LES 30 JOURS</div><div class="stat-number">{{ total_expirations_30j }}</div></div>
+        <div class="stat-card"><div class="stat-title">ASSURANCES</div><div class="stat-number">{{ assurance_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">VISITES TECH.</div><div class="stat-number">{{ visite_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">CARTES GRISES</div><div class="stat-number">{{ carte_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">AUTRES DOCS</div><div class="stat-number">{{ autres_count }}</div></div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title"><span><i class="fas fa-car-side"></i> Liste des véhicules</span>
+            <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="searchMatricule" placeholder="Rechercher par matricule..." onkeyup="filterVehicles()"></div>
+        </div>
+        <div class="scrollable-table">
+            <table id="vehiclesTable">
+                <thead><tr><th>MATRICULE</th><th>VÉHICULE</th><th>TYPE</th><th>DERNIER DOCUMENT</th><th>STATUT</th></tr></thead>
+                <tbody>
+                    {% for v in vehicules %}
+                    <tr>
+                        <td>{{ v.matricule }}</td><td>{{ v.vehicule }}</td><td>{{ v.type }}</td>
+                        <td>{{ v.dernier_document }}</td>
+                        <td>{% if v.statut == 'valide' %}<span class="badge badge-valide">Valide</span>
+                            {% elif v.statut == 'expire_bientot' %}<span class="badge badge-warning">Expire bientôt</span>
+                            {% elif v.statut == 'expire' %}<span class="badge badge-expire">Expiré</span>
+                            {% else %}<span class="badge">Aucun</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">Aucun véhicule enregistré.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title"><span><i class="fas fa-history"></i> Documents récents</span></div>
+        <div class="scrollable-table">
+            <table>
+                <thead><tr><th>MATRICULE</th><th>DOCUMENT</th><th>TYPE</th><th>DATE AJOUT</th><th>AJOUTÉ PAR</th></tr></thead>
+                <tbody>
+                    {% for doc in documents_recents %}
+                    <tr>
+                        <td>{{ doc.matricule.code }}</td><td>{{ doc.titre }}</td>
+                        <td>{{ doc.get_type_document_display }}</td>
+                        <td>{{ doc.date_creation|date:"d/m/Y H:i" }}</td>
+                        <td>{{ doc.auteur|default:"Admin" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">Aucun document récent.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title"><span><i class="fas fa-exclamation-triangle" style="color:#dc7a2c;"></i> Expirations imminentes</span></div>
+        <div class="expiring-grid">
+            <div class="expiring-list">
+                {% for doc in documents_expirant %}
+                <div class="expiring-item">
+                    <div><span class="expiring-meta">{{ doc.matricule.code }}</span> · {{ doc.get_type_document_display }}</div>
+                    <span class="expiring-date">📅 {{ doc.date_expiration|date:"d/m/Y" }} · Dans {{ doc.date_expiration|timeuntil:aujourdhui }}</span>
+                </div>
+                {% empty %}
+                <div>Aucun document expirant dans les 30 jours.</div>
+                {% endfor %}
+            </div>
+            <div class="chart-container">
+                <div style="font-weight:700; margin-bottom:12px;"><i class="fas fa-chart-pie"></i> Répartition (5 prochaines échéances)</div>
+                <canvas id="pieExpiringChart" style="max-height: 180px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title"><span><i class="fas fa-chart-bar"></i> Panorama des expirations (30 jours)</span></div>
+        <div class="two-charts">
+            <div class="chart-box"><canvas id="barChartExpiry"></canvas></div>
+            <div class="chart-box"><canvas id="miniPieDays"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterVehicles() {
+        const input = document.getElementById('searchMatricule');
+        const filter = input.value.toUpperCase();
+        const table = document.getElementById('vehiclesTable');
+        const tr = table.getElementsByTagName('tr');
+        for (let i = 1; i < tr.length; i++) {
+            const td = tr[i].getElementsByTagName('td')[0];
+            if (td) {
+                tr[i].style.display = td.textContent.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
+            }
+        }
+    }
+    const assurance = {{ assurance_count }};
+    const visite = {{ visite_count }};
+    const carte = {{ carte_count }};
+    const autres = {{ autres_count }};
+    new Chart(document.getElementById('barChartExpiry'), {
+        type: 'bar', data: { labels: ['Assurances', 'Visites tech.', 'Cartes grises', 'Autres'], datasets: [{ label: 'Nb docs expirant < 30j', data: [assurance, visite, carte, autres], backgroundColor: ['#2c7da0', '#e28743', '#61a5c2', '#9bb7d4'] }] },
+        options: { responsive: true, maintainAspectRatio: true }
+    });
+    const typesList = [{% for doc in documents_expirant %}'{{ doc.type_document }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+    const counts = { assurance: 0, visite_technique: 0, carte_grise: 0, autre: 0 };
+    typesList.forEach(t => counts[t]++);
+    new Chart(document.getElementById('pieExpiringChart'), {
+        type: 'pie', data: { labels: ['Assurance', 'Visite technique', 'Carte grise', 'Autre'], datasets: [{ data: [counts.assurance, counts.visite_technique, counts.carte_grise, counts.autre], backgroundColor: ['#f4a261', '#e76f51', '#2a9d8f', '#8ecae6'] }] }
+    });
+    const daysRemaining = [{% for doc in documents_expirant %}{{ doc.date_expiration|timeuntil:aujourdhui|slice:":2"|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+    new Chart(document.getElementById('miniPieDays'), {
+        type: 'doughnut', data: { labels: daysRemaining.map(d => d + ' jours'), datasets: [{ data: daysRemaining.map(() => 1), backgroundColor: ['#f28444', '#f6a66c', '#fbc48a', '#fde2b3', '#fff0dc'] }] }
+    });
+</script>
+</body>
+</html>
