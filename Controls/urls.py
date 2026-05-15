@@ -21,8 +21,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('VehiTrack.urls')),
-    path('', views.index, name='index'),
+    #path('', include('VehiTrack.urls')),
+    #path('', views.index, name='index'),
     path('', views.redirection_apres_connexion, name='accueil'),
     path('inscription/', views.inscription, name='inscription'),
     path("connexion/", auth_views.LoginView.as_view(template_name='vehiTrack/connexion.html'), name="login"),
