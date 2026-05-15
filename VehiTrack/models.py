@@ -45,7 +45,7 @@ class Document(models.Model):
         return f"{self.titre} ({self.matricule.code})"
 class HistoriqueDocument(models.Model):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="historiques")
-    action = models.CharField(max_length=50)  # création, modification, suppression
+    action = models.CharField(max_length=50)  # création, modification, suppression 
     utilisateur = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_action = models.DateTimeField(auto_now_add=True)
     details = models.TextField(blank=True, null=True)
