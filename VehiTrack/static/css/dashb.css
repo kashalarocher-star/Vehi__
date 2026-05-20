@@ -1,3 +1,7 @@
+
+.doc-extra{
+    display: none;
+}
 .btn-admin {
     display: inline-flex;
     align-items: center;

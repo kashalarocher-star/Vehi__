@@ -32,9 +32,12 @@ def dashboard(request):
     # Recuperation des vehicule et leur dernier document
     vehicules_data = []
     for mat in Matricule.objects.all():
-        dernier_doc = mat.documents.order_by('date_creation').first()
+        dernier_doc = mat.documents.order_by('-date_creation').first()
         if dernier_doc:
-            doc_info = f"{dernier_doc.get_type_document_display()} {dernier_doc.date_expiration.strftime('%d%m/%Y') if dernier_doc.date_expiration else 'Date inconnue'}"
+            if dernier_doc.date_expiration:
+                doc_info = f"{dernier_doc.get_type_document_display()} {dernier_doc.date_expiration.strftime('%d/%m/%Y')}"
+            else:
+                doc_info = f"{dernier_doc.get_type_document_display()} (Date inconnue)"
             statut = dernier_doc.statut
         else:
             doc_info = "Aucun document"
@@ -48,14 +51,14 @@ def dashboard(request):
         })
 
     # 5 derniers documets ajouter
-    doc_recents = Document.objects.select_related('matricule').order_by('-date_creation')[:5]
+    doc_recents = Document.objects.select_related('matricule').order_by('-date_creation')
 
     #Document qui expire dans 30jours
     docs_expirant = Document.objects.filter(
         date_expiration__gte=aujourdhui,
         date_expiration__lte=date_limite
     ).select_related('matricule').order_by('date_expiration')
-    #print(docs_expirant)
+    print(docs_expirant)
 
 
     total_expirations_30j = docs_expirant.count()

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashb.css' %}">
 </head>
 <body>
 <div class="sidebar">
@@ -16,7 +16,9 @@
     <div class="nav-menu">
         <a href="{% url 'dashboard' %}"><div class="nav-item active"><i class="fas fa-tachometer-alt"></i> Tableau de bord</div></a>
         <a href="{% url 'liste_matricules' %}"><div class="nav-item"><i class="fas fa-truck-moving"></i> Matricules</div></a>
-        <a href="{% url 'login' %}"><div class="nav-item"><i class="fas fa-sign-out-alt"></i> Admin</div></a>
+        <a href="/admin/" target="_blank" class="btn-admin">
+            <i class="fas fa-shield-alt"></i>Administration
+        </a>
         <div class="nav-divider"></div>
         <a href="{% url 'login' %}"><div class="nav-item"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></a>
     </div>
@@ -67,13 +69,16 @@
     </div>
 
     <div class="section-card">
-        <div class="section-title"><span><i class="fas fa-history"></i> Documents récents</span></div>
+        <div class="section-title"><span><i class="fas fa-history"></i> Documents récents</span>
+            <button id="voirToutBtn" class="btn-link">Voir tout <i class="fas fa-chevron-down"></i></button>
+        </div>
         <div class="scrollable-table">
             <table>
                 <thead><tr><th>MATRICULE</th><th>DOCUMENT</th><th>TYPE</th><th>DATE AJOUT</th><th>AJOUTÉ PAR</th></tr></thead>
                 <tbody>
                     {% for doc in documents_recents %}
-                    <tr>
+                    
+                    <tr {% if forloop.counter > 5 %} class="doc-extra" {% endif %}>
                         <td>{{ doc.matricule.code }}</td><td>{{ doc.titre }}</td>
                         <td>{{ doc.get_type_document_display }}</td>
                         <td>{{ doc.date_creation|date:"d/m/Y H:i" }}</td>
@@ -117,6 +122,7 @@
 </div>
 
 <script>
+    // 1. Filtre de recherche sur la table des véhicules
     function filterVehicles() {
         const input = document.getElementById('searchMatricule');
         const filter = input.value.toUpperCase();
@@ -125,28 +131,77 @@
         for (let i = 1; i < tr.length; i++) {
             const td = tr[i].getElementsByTagName('td')[0];
             if (td) {
-                tr[i].style.display = td.textContent.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
+                const txtValue = td.textContent || td.innerText;
+                tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
             }
         }
     }
-    const assurance = {{ assurance_count }};
-    const visite = {{ visite_count }};
-    const carte = {{ carte_count }};
-    const autres = {{ autres_count }};
+
+    // 2. Données pour les graphiques (injectées par Django)
+    const assurance = {{ assurance_count|default:0 }};
+    const visite = {{ visite_count|default:0 }};
+    const carte = {{ carte_count|default:0 }};
+    const autres = {{ autres_count|default:0 }};
+
+    // 3. Graphique à barres
     new Chart(document.getElementById('barChartExpiry'), {
-        type: 'bar', data: { labels: ['Assurances', 'Visites tech.', 'Cartes grises', 'Autres'], datasets: [{ label: 'Nb docs expirant < 30j', data: [assurance, visite, carte, autres], backgroundColor: ['#2c7da0', '#e28743', '#61a5c2', '#9bb7d4'] }] },
-        options: { responsive: true, maintainAspectRatio: true }
+        type: 'bar',
+        data: {
+            labels: ['Assurances', 'Visites tech.', 'Cartes grises', 'Autres'],
+            datasets: [{
+                label: 'Documents expirant < 30j',
+                data: [assurance, visite, carte, autres],
+                backgroundColor: ['#2c7da0', '#e28743', '#61a5c2', '#9bb7d4'],
+                borderRadius: 12
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { position: 'top' } }
+        }
     });
+
+    // 4. Camembert pour les 5 premiers documents expirant
     const typesList = [{% for doc in documents_expirant %}'{{ doc.type_document }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
     const counts = { assurance: 0, visite_technique: 0, carte_grise: 0, autre: 0 };
-    typesList.forEach(t => counts[t]++);
+    typesList.forEach(t => { if (counts[t] !== undefined) counts[t]++; });
+
     new Chart(document.getElementById('pieExpiringChart'), {
-        type: 'pie', data: { labels: ['Assurance', 'Visite technique', 'Carte grise', 'Autre'], datasets: [{ data: [counts.assurance, counts.visite_technique, counts.carte_grise, counts.autre], backgroundColor: ['#f4a261', '#e76f51', '#2a9d8f', '#8ecae6'] }] }
+        type: 'pie',
+        data: {
+            labels: ['Assurance', 'Visite technique', 'Carte grise', 'Autre'],
+            datasets: [{
+                data: [counts.assurance, counts.visite_technique, counts.carte_grise, counts.autre],
+                backgroundColor: ['#f4a261', '#e76f51', '#2a9d8f', '#8ecae6']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
-    const daysRemaining = [{% for doc in documents_expirant %}{{ doc.date_expiration|timeuntil:aujourdhui|slice:":2"|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
-    new Chart(document.getElementById('miniPieDays'), {
-        type: 'doughnut', data: { labels: daysRemaining.map(d => d + ' jours'), datasets: [{ data: daysRemaining.map(() => 1), backgroundColor: ['#f28444', '#f6a66c', '#fbc48a', '#fde2b3', '#fff0dc'] }] }
-    });
+
+    // 5. Bouton "Voir tout" pour dévoiler tous les documents récents
+
+    const voirToutBtn = document.getElementById('voirToutBtn');
+    let tousVisible = false;  // état actuel
+
+    function toggleDocuments() {
+        const hiddenRows = document.querySelectorAll('.doc-extra');
+        if (!tousVisible) {
+            // Afficher tous : enlever la classe
+            hiddenRows.forEach(row => row.classList.remove('doc-extra'));
+            voirToutBtn.innerHTML = 'Réduire <i class="fas fa-chevron-up"></i>';
+            tousVisible = true;
+        } else {
+            const hiddenRows = document.querySelectorAll('tr[5]');
+            hiddenRows.forEach(row => row.classList.add('doc-extra'))
+            voirToutBtn.innerHTML = 'Voir tout <i class="fas fa-chevron-down"></i>';
+            tousVisible = false;
+        }
+    }
+
+    if (voirToutBtn) {
+        voirToutBtn.addEventListener('click', toggleDocuments);
+    }
 </script>
 </body>
 </html>
