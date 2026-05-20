@@ -58,7 +58,7 @@ def dashboard(request):
         date_expiration__gte=aujourdhui,
         date_expiration__lte=date_limite
     ).select_related('matricule').order_by('date_expiration')
-    print(docs_expirant)
+    #print(docs_expirant)
 
 
     total_expirations_30j = docs_expirant.count()
