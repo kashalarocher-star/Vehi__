@@ -1,34 +1,66 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Liste des Matricules</title>
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des matricules - VehiTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/liste.css' %}">
 </head>
 <body>
-    
-    
-    {% block content %}
-    <h2 class="text-primary">Liste des matricules</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Code</th>
-                <th>Nom</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for m in matricules %}
-            <tr>
-                <td>{{ m.code }}</td>
-                <td>{{ m.nom }}</td>
-                <td>
-                    <a href="{% url 'detail_matricule' m.id %}" class="btn btn-sm btn-info">Voir détails</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endblock %}
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-list-ul"></i> Liste des matricules</h1>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Rechercher par code ou nom..." onkeyup="filterTable()">
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table id="matriculesTable">
+            <thead>
+                <tr><th>Code</th><th>Nom</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for mat in matricules %}
+                <tr>
+                    <td>{{ mat.code }}</td>
+                    <td>{{ mat.nom }}</td>
+                    <td class="actions">
+                        <a href="{% url 'detail_matricule' mat.id %}">Voir détails</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="no-results">Aucun matricule enregistré.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-links">
+        <a href="{% url 'accueil' %}"><i class="fas fa-home"></i> Accueil</a>
+        <a href="{% url 'login' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+    </div>
+</div>
+
+<script>
+    function filterTable() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById('matriculesTable');
+        const rows = table.getElementsByTagName('tr');
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            if (cells.length > 0) {
+                const code = cells[0].textContent.toLowerCase();
+                const nom = cells[1].textContent.toLowerCase();
+                rows[i].style.display = (code.includes(filter) || nom.includes(filter)) ? '' : 'none';
+            }
+        }
+    }
+</script>
 </body>
 </html>

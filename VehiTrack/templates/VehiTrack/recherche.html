@@ -1,49 +1,87 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Recherche par Matricule</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche documents - VehiTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/seach.css' %}">
 </head>
 <body>
-    
+    <div class="background-ambient">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-    {% block title %}Recherche{% endblock %}
-    
-    {% block content %}
-  
-    <h1 class="text-primary">Recherche de documents par matricule</h1>
-
-    <form method="post" class="row g-3">
-        {% csrf_token %}
-        <div class="col-auto">
-            <input type="text" name="matricule" class="form-control" placeholder="Entrez le matricule">
+    <div class="container">
+        <div class="search-hero">
+            <div class="logo"><i class="fas fa-folder-tree"></i><span>VehiTrack</span></div>
+            <h1 class="glow-text">Recherche documentaire</h1>
+            <p class="subtitle">Accédez instantanément aux documents d’un véhicule</p>
         </div>
-        
 
-        <div class="col-auto">
-            <button type="submit" class="btn btn-success">Rechercher</button>
+        <div class="search-card">
+            <form method="post" action="{% url 'rechercher_documents' %}" class="search-form">
+                {% csrf_token %}
+                <div class="input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" name="matricule" id="matricule" placeholder="Entrez le matricule (ex: ABC123)" value="{{ matricule_code|default:'' }}" autocomplete="off" required>
+                    <button type="submit" class="btn-search">Rechercher <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </form>
+
+            {% if matricule_code %}
+                <div class="search-feedback">
+                    {% if documents %}
+                        <div class="result-badge success"><i class="fas fa-check-circle"></i> {{ documents|length }} document(s) trouvé(s) pour le matricule {{ matricule_code }}</div>
+                    {% else %}
+                        <div class="result-badge error"><i class="fas fa-exclamation-triangle"></i> Aucun document trouvé pour {{ matricule_code }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
-    </form>
 
-    {% if matricule_code %}
-        <h2 class="mt-4">Résultats pour {{ matricule_code }}</h2>
         {% if documents %}
-            <ul class="list-group">
-                {% for doc in documents %}
-                    <li class="list-group-item">
-                        {{ doc.titre }} (créé le {{ doc.date_creation }})
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div class="alert alert-warning mt-3">
-                Aucun document trouvé pour ce matricule.
+            <div class="results-container">
+                <div class="results-header">
+                    <h2><i class="fas fa-file-alt"></i> Documents associés</h2>
+                    <span class="vehicle-ref">{{ matricule_code }}</span>
+                </div>
+                <div class="documents-mosaic">
+                    {% for doc in documents %}
+                    <div class="document-tile" data-expired="{% if doc.date_expiration and doc.date_expiration < now %}true{% else %}false{% endif %}">
+                        <div class="tile-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="tile-content">
+                            <h3>{{ doc.titre }}</h3>
+                            <div class="tile-meta">
+                                <span><i class="fas fa-tag"></i> {{ doc.get_type_document_display }}</span>
+                                <span><i class="fas fa-calendar-alt"></i> Ajouté le {{ doc.date_creation|date:"d/m/Y" }}</span>
+                                {% if doc.date_expiration %}
+                                    <span class="expiry-date"><i class="fas fa-hourglass-half"></i> Expire le {{ doc.date_expiration|date:"d/m/Y" }}</span>
+                                {% endif %}
+                            </div>
+                            {% if doc.contenu %}
+                                <p class="tile-description">{{ doc.contenu|truncatewords:20 }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="tile-actions">
+                            <a href="#" class="action-icon" title="Voir détail"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="action-icon" title="Télécharger"><i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
-    {% endif %}
-    {% endblock %}
+
+        <div class="back-home">
+            <a href="{% url 'accueil' %}" class="btn-outline-glass"><i class="fas fa-home"></i> Retour à l’accueil</a>
+        </div>
+    </div>
 </body>
 </html>
-
-
-
-

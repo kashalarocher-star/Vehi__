@@ -16,8 +16,9 @@
     <div class="nav-menu">
         <a href="{% url 'dashboard' %}"><div class="nav-item active"><i class="fas fa-tachometer-alt"></i> Tableau de bord</div></a>
         <a href="{% url 'liste_matricules' %}"><div class="nav-item"><i class="fas fa-truck-moving"></i> Matricules</div></a>
+        <a href="{% url 'login' %}"><div class="nav-item"><i class="fas fa-sign-out-alt"></i> Admin</div></a>
         <div class="nav-divider"></div>
-        <a href="{% url 'logout' %}"><div class="nav-item"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></a>
+        <a href="{% url 'login' %}"><div class="nav-item"><i class="fas fa-sign-out-alt"></i> Déconnexion</div></a>
     </div>
 </div>
 <div class="main-content">

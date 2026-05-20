@@ -1,13 +1,23 @@
 from django.db import models
 
 # Create your models here.
+from django.conf import settings
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
 class Matricule(models.Model):
+    #ajouter les types de vehicule
+    TYPE_VEHICULE_CHOICES =[
+        ('camionnette', 'Camionnette'),
+        ('suv', 'Suv'),
+        ('camion', 'Camion'),
+        ('voiture', 'Voiture'),
+        ('autre', 'Autre'),
+    ]
+    type_vehicule = models.CharField(max_length=20, choices=TYPE_VEHICULE_CHOICES, null=True, blank=True)
     code = models.CharField(max_length=50, unique=True)
     nom = models.CharField(max_length=100)
-
+    proprietaire = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='vehicule', null=True, blank=True)
     def __str__(self):
         return f"{self.code} - {self.nom}"
 

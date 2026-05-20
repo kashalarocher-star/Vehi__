@@ -1,34 +1,83 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Ajouter un Document</title>
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un document - VehiTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/ajouter.css' %}">
 </head>
 <body>
-    
+<div class="container">
+    <div class="header">
+        <a href="{% url 'detail_matricule' matricule.id %}" class="back-link"><i class="fas fa-arrow-left"></i> Retour au matricule</a>
+        <h1><i class="fas fa-plus-circle"></i> Ajouter un document</h1>
+    </div>
 
-    {% block title %}Ajouter un document{% endblock %}
-
-    {% block content %}
-    <h2 class="text-success">Ajouter un document</h2>
-    <form method="post" class="row g-3">
-        {% csrf_token %}
-        
-        <div class="mb-3">
-            <label for="id_titre" class="form-label">Titre</label>
-            <input type="text" name="titre" id="id_titre" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="id_contenu" class="form-label">Contenu</label>
-            <textarea name="contenu" id="id_contenu" class="form-control"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="id_image" class="form-label">Image</label>
-            <input type="file" name="image" id="id_image" class="form-control">
+    <div class="form-card">
+        <div class="matricule-info">
+            <span class="label">Pour le matricule :</span>
+            <strong>{{ matricule.code }} - {{ matricule.nom }}</strong>
         </div>
 
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-    </form>
-    {% endblock %}
+        <form method="post" enctype="multipart/form-data" class="document-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="titre"><i class="fas fa-heading"></i> Titre du document</label>
+                <input type="text" name="titre" id="titre" class="form-control" placeholder="Ex: Assurance 2025" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contenu"><i class="fas fa-align-left"></i> Contenu / Description</label>
+                <textarea name="contenu" id="contenu" class="form-control" rows="4" placeholder="Détails supplémentaires..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="type_document"><i class="fas fa-tag"></i> Type de document</label>
+                <select name="type_document" id="type_document" class="form-control">
+                    <option value="assurance">Assurance</option>
+                    <option value="visite_technique">Visite technique</option>
+                    <option value="carte_grise">Carte grise</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date_expiration"><i class="fas fa-calendar-alt"></i> Date d'expiration (optionnel)</label>
+                <input type="date" name="date_expiration" id="date_expiration" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="image"><i class="fas fa-image"></i> Fichier image (optionnel)</label>
+                <div class="file-input-wrapper">
+                    <input type="file" name="image" id="image" accept="image/*" class="file-input">
+                    <label for="image" class="file-label">Choisir un fichier</label>
+                    <span class="file-name">Aucun fichier sélectionné</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer le document</button>
+                <a href="{% url 'detail_matricule' matricule.id %}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Afficher le nom du fichier sélectionné
+    const fileInput = document.getElementById('image');
+    const fileNameSpan = document.querySelector('.file-name');
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            fileNameSpan.textContent = fileInput.files[0].name;
+        } else {
+            fileNameSpan.textContent = 'Aucun fichier sélectionné';
+        }
+    });
+</script>
 </body>
 </html>

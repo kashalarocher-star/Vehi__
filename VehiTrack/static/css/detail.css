@@ -1,0 +1,292 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f9fe;
+    padding: 30px;
+    color: #0f2c3b;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 28px;
+    padding: 30px 32px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0edf5;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.title-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #2c7da0;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.back-link:hover {
+    color: #1a6d5e;
+    transform: translateX(-3px);
+}
+
+h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1a4c6e, #2b7a62);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.btn {
+    padding: 8px 18px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0b2b3b, #1a6d5e);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #cbdbe6;
+    color: #2c7da0;
+}
+
+.btn-outline:hover {
+    background: #eef2fa;
+}
+
+/* Carte matricule */
+.matricule-card {
+    background: linear-gradient(135deg, #eef2fa, #e6edf5);
+    border-radius: 24px;
+    padding: 25px 30px;
+    margin-bottom: 35px;
+    border: 1px solid #dce5ec;
+}
+
+.matricule-code {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a4c6e;
+    letter-spacing: 1px;
+    font-family: monospace;
+}
+
+.matricule-nom {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #2c5a6e;
+    margin-top: 5px;
+}
+
+.matricule-meta {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #4a6f8c;
+}
+
+.matricule-meta i {
+    margin-right: 6px;
+    width: 18px;
+}
+
+.badge {
+    background: #2c7da0;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Section documents */
+.documents-section {
+    margin-top: 10px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.section-header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a4c6e;
+}
+
+.documents-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.document-card {
+    background: #f9fafc;
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid #e2edf2;
+    transition: 0.1s;
+    flex-wrap: wrap;
+}
+
+.document-card:hover {
+    background: #f4f9fe;
+    border-color: #cbdbe6;
+}
+
+.doc-icon {
+    font-size: 2rem;
+    color: #2c7da0;
+    width: 50px;
+    text-align: center;
+}
+
+.doc-info {
+    flex: 2;
+    min-width: 200px;
+}
+
+.doc-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0f2c3b;
+    margin-bottom: 6px;
+}
+
+.doc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.75rem;
+    color: #5e7e97;
+}
+
+.doc-meta i {
+    margin-right: 4px;
+    width: 14px;
+}
+
+.expiry {
+    color: #c86e1a;
+    background: #fff0dc;
+    padding: 2px 8px;
+    border-radius: 30px;
+}
+
+.doc-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    color: #7c9ab3;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+.btn-icon:hover {
+    color: #1a6d5e;
+    transform: scale(1.05);
+}
+
+.btn-icon.delete:hover {
+    color: #bc3f2e;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: #f9fafc;
+    border-radius: 24px;
+    border: 1px dashed #cbdbe6;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #9bb7d4;
+    margin-bottom: 15px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+    color: #5e7e97;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    body {
+        padding: 20px;
+    }
+    .container {
+        padding: 20px;
+    }
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .title-section {
+        justify-content: space-between;
+    }
+    .document-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .doc-actions {
+        align-self: flex-end;
+    }
+}

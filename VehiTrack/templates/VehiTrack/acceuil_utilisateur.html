@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon véhicule - VehiTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/user.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-car"></i> Mon véhicule</h1>
+        <a href="{% url 'login' %}" class="btn">Déconnexion</a>
+    </div>
+
+    <div class="vehicle-info">
+        <h2>{{ vehicule.nom }} ({{ vehicule.code }})</h2>
+        <p>Matricule : {{ vehicule.code }}</p>
+        <p>Type : {{ vehicule.type_vehicule|default:"Non renseigné" }}</p>
+    </div>
+
+    <h3><i class="fas fa-file-alt"></i> Documents associés</h3>
+    <ul class="documents-list">
+        {% for doc in documents %}
+        <li>
+            <span><i class="fas fa-file-pdf"></i> {{ doc.titre }} ({{ doc.get_type_document_display }})</span>
+            <span>Expire le {{ doc.date_expiration|date:"d/m/Y" }}</span>
+        </li>
+        {% empty %}
+        <li class="empty">Aucun document pour ce véhicule.</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_staff %}
+    <div class="admin-link">
+        <a href="{% url 'liste_matricules' %}">Voir tous les véhicules (admin)</a>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

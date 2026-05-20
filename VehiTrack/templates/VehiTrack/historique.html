@@ -1,52 +1,83 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Historique du Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique du document - VehiTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/historique.css' %}">
 </head>
 <body>
-    
+<div class="background-gradient"></div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <a href="javascript:history.back()" class="back-link"><i class="fas fa-arrow-left"></i> Retour</a>
+            <h1><i class="fas fa-history"></i> Historique du document</h1>
+        </div>
 
-    {% block title %}Historique Document{% endblock %}
-
-    {% block content %}
-    <div class="container mt-4">
-        <h1 class="text-primary">Historique du document : {{ document.titre }}</h1>
-
-        <!-- Affichage de l'image associée -->
-        {% if document.image %}
-            <div class="mb-3">
-                <img src="{{ document.image.url }}" alt="{{ document.titre }}" class="img-thumbnail" width="300">
+        <div class="document-info">
+            <div class="doc-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="doc-details">
+                <h2>{{ document.titre }}</h2>
+                <p><strong>Matricule :</strong> {{ document.matricule.code }} - {{ document.matricule.nom }}</p>
+                <p><strong>Type :</strong> {{ document.get_type_document_display }}</p>
+                {% if document.date_expiration %}
+                    <p><strong>Expiration :</strong> {{ document.date_expiration|date:"d/m/Y" }}</p>
+                {% endif %}
             </div>
-        {% endif %}
+        </div>
 
-        <!-- Tableau Bootstrap -->
-        <table class="table2">
-            <thead class="table-dark">
-                <tr>
-                    <th>Action</th>
-                    <th>Utilisateurs</th>
-                    <th>Date</th>
-                    <th>Détails</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for h in historiques %}
-                <tr>
-                    <td>{{ h.action }}</td>
-                    <td>{{ h.utilisateur }}</td>
-                    <td>{{ h.date_action }}</td>
-                    <td>{{ h.details }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center text-muted">Aucun historique disponible.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="timeline">
+            <div class="timeline-header">
+                <i class="fas fa-list-ul"></i> Chronologie des actions
+            </div>
 
-        <a href="{% url 'detail_matricule' document.matricule.id %}" class="btn btn-secondary mt-3">Retour</a>
+            {% if histories %}
+                <div class="timeline-list">
+                    {% for hist in histories %}
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            {% if hist.action == 'création' %}
+                                <i class="fas fa-plus-circle"></i>
+                            {% elif hist.action == 'modification' %}
+                                <i class="fas fa-edit"></i>
+                            {% elif hist.action == 'suppression' %}
+                                <i class="fas fa-trash-alt"></i>
+                            {% else %}
+                                <i class="fas fa-clock"></i>
+                            {% endif %}
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-action">{{ hist.action|capfirst }}</div>
+                            <div class="timeline-user"><i class="fas fa-user"></i> {{ hist.utilisateur|default:"Inconnu" }}</div>
+                            <div class="timeline-date"><i class="fas fa-calendar-alt"></i> {{ hist.date_action|date:"d/m/Y H:i" }}</div>
+                            {% if hist.details %}
+                                <div class="timeline-details">{{ hist.details }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <p>Aucun historique disponible pour ce document.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card-footer">
+            <a href="{% url 'detail_matricule' document.matricule.id %}" class="btn btn-primary">
+                <i class="fas fa-car"></i> Voir le véhicule
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                <i class="fas fa-undo-alt"></i> Retour
+            </a>
+        </div>
     </div>
-    {% endblock %}
+</div>
 </body>
 </html>
