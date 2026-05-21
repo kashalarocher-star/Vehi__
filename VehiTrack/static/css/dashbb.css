@@ -2,6 +2,17 @@
 .doc-extra{
     display: none;
 }
+.btn-link{
+    background: none;
+    border: none;
+    color: #2c7da0;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+}
 .btn-admin {
     display: inline-flex;
     align-items: center;
