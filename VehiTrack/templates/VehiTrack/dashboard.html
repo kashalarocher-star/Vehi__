@@ -15,7 +15,7 @@
     <div class="sidebar-header"><h2><i class="fas fa-folder-tree"></i> VehiTrack</h2><p>Gestion flotte</p></div>
     <div class="nav-menu">
         <a href="{% url 'dashboard' %}"><div class="nav-item active"><i class="fas fa-tachometer-alt"></i> Tableau de bord</div></a>
-        <a href="{% url 'liste_matricules' %}"><div class="nav-item"><i class="fas fa-truck-moving"></i> Matricules</div></a>
+        <a href="{% url 'liste_matricules' %}"><div class="nav-item"><i class="fas fa-truck-moving"></i> Plaques immatricula_</div></a>
         <a href="/admin/" target="_blank" class="btn-admin">
             <i class="fas fa-shield-alt"></i>Administration
         </a>
@@ -37,8 +37,8 @@
     <div class="stats-grid">
         <div class="stat-card"><div class="stat-title">DANS LES 30 JOURS</div><div class="stat-number">{{ total_expirations_30j }}</div></div>
         <div class="stat-card"><div class="stat-title">ASSURANCES</div><div class="stat-number">{{ assurance_count }}</div></div>
-        <div class="stat-card"><div class="stat-title">VISITES TECH.</div><div class="stat-number">{{ visite_count }}</div></div>
-        <div class="stat-card"><div class="stat-title">CARTES GRISES</div><div class="stat-number">{{ carte_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">CONTROL TECH.</div><div class="stat-number">{{ visite_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">CARTES ROSE</div><div class="stat-number">{{ carte_count }}</div></div>
         <div class="stat-card"><div class="stat-title">AUTRES DOCS</div><div class="stat-number">{{ autres_count }}</div></div>
     </div>
 
@@ -79,7 +79,7 @@
                     {% for doc in documents_recents %}
                     
                     <tr {% if forloop.counter > 5 %}class="doc-extra"{% endif %}>
-                        <td>{{ doc.matricule.code }}</td><td>{{ doc.titre }}</td>
+                        <td>{{ doc.plaque_d_immatricule.code }}</td><td>{{ doc.titre }}</td>
                         <td>{{ doc.get_type_document_display }}</td>
                         <td>{{ doc.date_creation|date:"d/m/Y H:i" }}</td>
                         <td>{{ doc.auteur|default:"Admin" }}</td>
@@ -98,7 +98,7 @@
             <div class="expiring-list">
                 {% for doc in documents_expirant %}
                 <div class="expiring-item">
-                    <div><span class="expiring-meta">{{ doc.matricule.code }}</span> · {{ doc.get_type_document_display }}</div>
+                    <div><span class="expiring-meta">{{ doc.plaque_d_immatricule.code }}</span> · {{ doc.get_type_document_display }}</div>
                     <span class="expiring-date">📅 {{ doc.date_expiration|date:"d/m/Y" }} · Dans {{ doc.date_expiration|timeuntil:aujourdhui }}</span>
                 </div>
                 {% empty %}
@@ -147,7 +147,7 @@
     new Chart(document.getElementById('barChartExpiry'), {
         type: 'bar',
         data: {
-            labels: ['Assurances', 'Visites tech.', 'Cartes grises', 'Autres'],
+            labels: ['Assurances', 'Controls tech.', 'Cartes rose', 'Autres'],
             datasets: [{
                 label: 'Documents expirant < 30j',
                 data: [assurance, visite, carte, autres],

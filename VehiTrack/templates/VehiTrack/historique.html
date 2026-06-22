@@ -22,7 +22,7 @@
             <div class="doc-icon"><i class="fas fa-file-alt"></i></div>
             <div class="doc-details">
                 <h2>{{ document.titre }}</h2>
-                <p><strong>Matricule :</strong> {{ document.matricule.code }} - {{ document.matricule.nom }}</p>
+                <p><strong>Plaque d'immatricule :</strong> {{ document.plaque_d_immatricule.code }} - {{ document.plaque_d_immatricule.nom }}</p>
                 <p><strong>Type :</strong> {{ document.get_type_document_display }}</p>
                 {% if document.date_expiration %}
                     <p><strong>Expiration :</strong> {{ document.date_expiration|date:"d/m/Y" }}</p>
@@ -70,7 +70,7 @@
         </div>
 
         <div class="card-footer">
-            <a href="{% url 'detail_matricule' document.matricule.id %}" class="btn btn-primary">
+            <a href="{% url 'detail_matricule' document.plaque_d_immatricule.id %}" class="btn btn-primary">
                 <i class="fas fa-car"></i> Voir le véhicule
             </a>
             <a href="javascript:history.back()" class="btn btn-secondary">

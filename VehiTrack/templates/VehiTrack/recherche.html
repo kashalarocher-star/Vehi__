@@ -19,7 +19,7 @@
     <div class="container">
         <div class="search-hero">
             <div class="logo"><i class="fas fa-folder-tree"></i><span>VehiTrack</span></div>
-            <h1 class="glow-text">Recherche documentaire</h1>
+            <h1 class="glow-text">Recherche par la plaque d'immatriculation</h1>
             <p class="subtitle">Accédez instantanément aux documents d’un véhicule</p>
         </div>
 
@@ -36,7 +36,7 @@
             {% if matricule_code %}
                 <div class="search-feedback">
                     {% if documents %}
-                        <div class="result-badge success"><i class="fas fa-check-circle"></i> {{ documents|length }} document(s) trouvé(s) pour le matricule {{ matricule_code }}</div>
+                        <div class="result-badge success"><i class="fas fa-check-circle"></i> {{ documents|length }} document(s) trouvé(s) pour la  plaque d'immatriculation{{ matricule_code }}</div>
                     {% else %}
                         <div class="result-badge error"><i class="fas fa-exclamation-triangle"></i> Aucun document trouvé pour {{ matricule_code }}</div>
                     {% endif %}
@@ -70,7 +70,7 @@
                             {% endif %}
                         </div>
                         <div class="tile-actions">
-                            <a href="#" class="action-icon" title="Voir détail"><i class="fas fa-eye"></i></a>
+                            <a href="{% url 'detail_matricule' mat.id %}" class="action-icon" title="Voir détail"><i class="fas fa-eye">voir detail</i></a>
                             <a href="#" class="action-icon" title="Télécharger"><i class="fas fa-download"></i></a>
                         </div>
                     </div>

@@ -51,20 +51,20 @@ def dashboard(request):
         })
 
     # 5 derniers documets ajouter
-    doc_recents = Document.objects.select_related('matricule').order_by('-date_creation')
+    doc_recents = Document.objects.select_related('plaque_d_immatricule').order_by('-date_creation')
 
     #Document qui expire dans 30jours
     docs_expirant = Document.objects.filter(
         date_expiration__gte=aujourdhui,
         date_expiration__lte=date_limite
-    ).select_related('matricule').order_by('date_expiration')
+    ).select_related('plaque_d_immatricule').order_by('date_expiration')
     #print(docs_expirant)
 
 
     total_expirations_30j = docs_expirant.count()
     assurance_count = docs_expirant.filter(type_document='assurence').count()
-    visite_count = docs_expirant.filter(type_document='visite_technique').count()
-    carte_count = docs_expirant.filter(type_document=' carte_grise').count()
+    visite_count = docs_expirant.filter(type_document='controle technique').count()
+    carte_count = docs_expirant.filter(type_document='carte rose').count()
     autres_count = docs_expirant.filter(type_document='autre').count()
 
     context = {
@@ -93,9 +93,9 @@ def liste_matricules(request):
 
 # Détails d’un matricule et ses documents
 def detail_matricule(request, matricule_id):
-    matricule = get_object_or_404(Matricule, id=matricule_id)
-    documents = matricule.documents.all()
-    return render(request, "VehiTrack/detail.html", {"matricule": matricule, "documents": documents})
+    plaque_d_immatricule = get_object_or_404(Matricule, id=matricule_id)
+    documents = plaque_d_immatricule.documents.all()
+    return render(request, "VehiTrack/detail.html", {"matricule": plaque_d_immatricule, "documents": documents})
 
 @login_required
 def acceuil_utilisateur(request):
@@ -115,12 +115,12 @@ def redirection_apres_connexion(request):
     else:
         return redirect('acceuil_utilisateur')
 def ajouter_document(request, matricule_id):
-    matricule = get_object_or_404(Matricule, id=matricule_id)
+    plaque_d_immatricule = get_object_or_404(Matricule, id=matricule_id)
     if request.method == "POST":
         titre = request.POST.get("titre")
         contenu = request.POST.get("contenu")
         doc = Document.objects.create(
-            matricule=matricule,
+            matricule=plaque_d_immatricule,
             titre=titre,
             contenu=contenu,
             auteur=request.user
@@ -131,8 +131,8 @@ def ajouter_document(request, matricule_id):
             utilisateur=request.user,
             details=f"Document {titre} ajouté"
         )
-        return redirect("detail_matricule", matricule_id=matricule.id)
-    return render(request, "VehiTrack/ajouter.html", {"matricule": matricule})
+        return redirect("detail_matricule", matricule_id=plaque_d_immatricule.id)
+    return render(request, "VehiTrack/ajouter.html", {"matricule": plaque_d_immatricule})
 
 # Voir l’historique d’un document
 def historique_document(request, doc_id):
@@ -169,6 +169,6 @@ from .models import Document
 
 def supprimer_document(request, doc_id):
     document = get_object_or_404(Document, id=doc_id)
-    matricule_id = document.matricule.id
+    matricule_id = document.plaque_d_immatricule.id
     document.delete()
     return redirect("detail_matricule", matricule_id=matricule_id)

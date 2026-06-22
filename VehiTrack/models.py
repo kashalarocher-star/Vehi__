@@ -30,14 +30,23 @@ class Document(models.Model):
         ('autre', 'Autre'),
 
     ]
-    matricule = models.ForeignKey(Matricule, on_delete=models.CASCADE, related_name="documents")
-    titre = models.CharField(max_length=200)
-    contenu = models.TextField()
+    TYPE_CHOICE = [
+        ('carte rose', 'carte rose'),
+        ('permis de conduire', 'permis de conduire'),
+        ('assurence', 'assurence'),
+        ('controle technique', 'controle technique'),
+        ('stationnement', 'stationnement'),
+        ('vignette', 'vignette'),
+        ('autorisation de transport(patente)', 'autorisation de transport(patente)'),
+    ]
+    plaque_d_immatricule = models.ForeignKey(Matricule, on_delete=models.CASCADE, related_name="documents", null=True, blank=True)
+    titre = models.CharField(max_length=200, choices=TYPE_CHOICE,default='titre du document')
+    contenu_du_document = models.TextField()
     image = models.ImageField(upload_to="documents/", blank=True, null=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
     auteur = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    type_document = models.CharField(max_length=50, choices=TYPE_CHOICES,default='autre')
+    type_document = models.CharField(max_length=50, choices=TYPE_CHOICE,default='carte rose')
     date_expiration = models.DateField(null=True, blank=True, help_text="Date d'expiration")
 
     @property
@@ -52,7 +61,9 @@ class Document(models.Model):
         return 'valide'
     
     def __str__(self):
-        return f"{self.titre} ({self.matricule.code})"
+        if self.plaque_d_immatricule:
+            return f"{self.titre} ({self.plaque_d_immatricule.code})"
+        return f"{self.titre} (⚠️ faut mettre une plaque)"
 class HistoriqueDocument(models.Model):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="historiques")
     action = models.CharField(max_length=50)  # création, modification, suppression 
