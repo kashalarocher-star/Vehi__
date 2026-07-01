@@ -21,7 +21,8 @@ class Matricule(models.Model):
     def __str__(self):
         return f"{self.code} - {self.nom}"
 
-
+    class Meta:
+        app_label = 'VehiTrack'
 class Document(models.Model):
     TYPE_CHOICES = [
         ('assurence', 'Assurence'),
@@ -64,6 +65,8 @@ class Document(models.Model):
         if self.plaque_d_immatricule:
             return f"{self.titre} ({self.plaque_d_immatricule.code})"
         return f"{self.titre} (⚠️ faut mettre une plaque)"
+    class Meta:
+        app_label = 'VehiTrack'
 class HistoriqueDocument(models.Model):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="historiques")
     action = models.CharField(max_length=50)  # création, modification, suppression 
@@ -73,3 +76,5 @@ class HistoriqueDocument(models.Model):
 
     def __str__(self):
         return f"{self.action} - {self.document.titre} ({self.date_action})"
+    class Meta:
+        app_label = 'VehiTrack'

@@ -17,10 +17,11 @@
     </div>
 
     <div class="vehicle-info">
-        <h2>{{ vehicule.nom }} ({{ vehicule.code }})</h2>
-        <p>Plaque d'immatricule : {{ vehicule.code }}</p>
+        <h2>{{ vehicule.nom }} ({{ vehicule.code|default:"Non renseigné" }})</h2>
+        <p>Plaque d'immatricule : {{ vehicule.code|default:"Non renseigné" }}</p>
         <p>Type : {{ vehicule.type_vehicule|default:"Non renseigné" }}</p>
     </div>
+
     <h3><i class="fas fa-file-alt"></i> Documents associés</h3>
     <ul class="documents-list">
         {% for doc in documents %}

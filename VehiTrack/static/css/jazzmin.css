@@ -1,0 +1,178 @@
+/* ============================================
+   ADMIN CUSTOM - VehiTrack / Jazzmin
+   ============================================ */
+
+/* ---- 1. PERSONNALISATION GÉNÉRALE ---- */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f4f9fe;
+}
+
+/* En-tête de page */
+#header {
+    background: linear-gradient(135deg, #0b2b3b, #1a4c6e) !important;
+    border-bottom: 2px solid #2dd4bf !important;
+}
+#header .brand-text {
+    color: #ffffff !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+#header .brand-text i {
+    color: #2dd4bf;
+}
+
+/* Sidebar (Jazzmin) */
+.sidebar {
+    background: linear-gradient(180deg, #0b2b3b, #07212e) !important;
+    border-right: 1px solid #2c586e;
+}
+.sidebar .nav-link {
+    color: #cbdbe6 !important;
+    border-radius: 12px;
+    margin: 4px 8px;
+    transition: 0.2s;
+}
+.sidebar .nav-link.active {
+    background: rgba(45, 212, 191, 0.15) !important;
+    color: #88f3e6 !important;
+}
+.sidebar .nav-link:hover {
+    background: rgba(45, 212, 191, 0.08);
+}
+.sidebar .nav-link i {
+    color: #2dd4bf;
+}
+.sidebar .brand-text {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+/* ---- 2. PAGE "HISTORIQUE DOCUMENTS" (model HistoriqueDocument) ---- */
+/* Cibler spécifiquement la liste de ce modèle */
+.app-VehiTrack .model-HistoriqueDocument #content-main {
+    background: white;
+    padding: 20px;
+    border-radius: 28px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0edf5;
+}
+
+/* En-tête du tableau */
+.app-VehiTrack .model-HistoriqueDocument #content-main thead th {
+    background: linear-gradient(135deg, #1a4c6e, #2b7a62) !important;
+    color: white !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 10px;
+    border-bottom: none;
+}
+.app-VehiTrack .model-HistoriqueDocument #content-main tbody td {
+    padding: 10px 10px;
+    border-bottom: 1px solid #ecf3f8;
+    color: #0f2c3b;
+}
+.app-VehiTrack .model-HistoriqueDocument #content-main tbody tr:hover {
+    background-color: #f4f9fe !important;
+}
+
+/* Boutons d'action (en bas) */
+.app-VehiTrack .model-HistoriqueDocument .actions .button {
+    background: #2dd4bf !important;
+    border: none;
+    border-radius: 40px;
+    padding: 6px 18px;
+    font-weight: 600;
+    color: #0f2c3b !important;
+    transition: 0.2s;
+}
+.app-VehiTrack .model-HistoriqueDocument .actions .button:hover {
+    background: #1a9e8a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+/* Filtres et recherche */
+.app-VehiTrack .model-HistoriqueDocument #toolbar form input[type="text"] {
+    border-radius: 40px;
+    border: 1px solid #dce5ec;
+    padding: 8px 16px;
+    background: white;
+}
+.app-VehiTrack .model-HistoriqueDocument #toolbar form input[type="submit"] {
+    background: #1a4c6e;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 8px 20px;
+    font-weight: 600;
+}
+
+/* ---- 3. BOUTONS D'ACTION (général) ---- */
+.submit-row input[type="submit"] {
+    background: linear-gradient(135deg, #0b2b3b, #1a6d5e) !important;
+    border: none !important;
+    border-radius: 40px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    color: white !important;
+    transition: 0.2s;
+}
+.submit-row input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* ---- 4. MESSAGES DE SUCCÈS / ERREUR ---- */
+.alert-success {
+    background: #dff9e6 !important;
+    border-color: #1f7840 !important;
+    color: #1f7840 !important;
+    border-radius: 40px;
+}
+.alert-error {
+    background: #ffe3e3 !important;
+    border-color: #bc3f2e !important;
+    color: #bc3f2e !important;
+    border-radius: 40px;
+}
+
+/* ---- 5. PIED DE PAGE ---- */
+#footer {
+    background: #0b2b3b !important;
+    color: #cbdbe6 !important;
+    border-top: 1px solid #2c586e;
+}
+#footer a {
+    color: #2dd4bf !important;
+}
+
+/* ---- 6. PERSONNALISATION DES ONGLETS DANS L'ADMIN ---- */
+.tab-nav li a {
+    border-radius: 40px !important;
+    background: #f0f5fa !important;
+    color: #0f2c3b !important;
+    padding: 6px 18px !important;
+    transition: 0.2s;
+}
+.tab-nav li a.active {
+    background: #1a4c6e !important;
+    color: white !important;
+}
+.tab-nav li a:hover {
+    background: #d0e2ef !important;
+}
+
+/* ---- 7. RESPONSIVE ---- */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+        flex-direction: row !important;
+        overflow-x: auto;
+    }
+    .app-VehiTrack .model-HistoriqueDocument #content-main {
+        padding: 12px;
+        border-radius: 16px;
+    }
+}
