@@ -70,9 +70,8 @@
                             {% endif %}
                         </div>
                         <div class="tile-actions">
-                            <a href="#" class="action-icon" title="Voir détail"><i class="fas fa-eye"></i></a>
-                            <a href="#" class="action-icon" title="Télécharger"><i class="fas fa-download"></i></a>
-                        </div>
+                            <a href="{% url 'detail_CD' doc.plaque_d_immatricule.id %}" class="action-icon" title="Voir détail"><i class="fas fa-eye"></i></a>
+                            
                     </div>
                     {% endfor %}
                 </div>

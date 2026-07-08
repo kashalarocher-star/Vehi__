@@ -97,6 +97,12 @@ def detail_matricule(request, matricule_id):
     documents = plaque_d_immatricule.documents.all()
     return render(request, "VehiTrack/detail.html", {"matricule": plaque_d_immatricule, "documents": documents})
 
+def detail_CD(request, matricule_id):
+    plaque_d_immatricule = get_object_or_404(Matricule, id=matricule_id)
+    documents = plaque_d_immatricule.documents.all()
+    return render(request, "VehiTrack/detail_C.html", {"matricule": plaque_d_immatricule, "documents": documents})
+
+
 @login_required
 def acceuil_utilisateur(request):
     vehicule = request.user.vehicule.first()
@@ -139,6 +145,11 @@ def historique_document(request, doc_id):
     document = get_object_or_404(Document, id=doc_id)
     historiques = document.historiques.all().order_by("-date_action")
     return render(request, "VehiTrack/historique.html", {"document": document, "historiques": historiques})
+
+def histori(request, doc_id):
+    document = get_object_or_404(Document, id=doc_id)
+    historiques = document.historiques.all().order_by("-date_action")
+    return render(request, "VehiTrack/histori.html", {"document": document, "historiques": historiques})
 from django.shortcuts import render
 from .models import Matricule
 

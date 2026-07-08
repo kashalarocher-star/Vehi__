@@ -35,6 +35,8 @@ urlpatterns = [
     path('document/<int:doc_id>/historique/', views.historique_document, name='historique_document'),
     path('matricule/<int:matricule_id>/ajouter/', views.ajouter_document, name='ajouter_document'),
     path('document/<int:doc_id>/supprimer/', views.supprimer_document, name='supprimer_document'),
+    path('detail_C/<int:matricule_id>/', views.detail_CD, name='detail_CD'),
+    path('histori/<int:doc_id>/historique/', views.histori, name='histori'),
 
 
 ]
