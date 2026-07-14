@@ -65,6 +65,10 @@ def dashboard(request):
     assurance_count = docs_expirant.filter(type_document='assurence').count()
     visite_count = docs_expirant.filter(type_document='controle technique').count()
     carte_count = docs_expirant.filter(type_document='carte rose').count()
+    permis_count = docs_expirant.filter(type_document='permis de conduire').count()
+    stationnement_count = docs_expirant.filter(type_document='stationnement').count()
+    vignette_count = docs_expirant.filter(type_document='vignette').count()
+    autorisation_count = docs_expirant.filter(type_document='autorisation de transport(patente)').count()
     autres_count = docs_expirant.filter(type_document='autre').count()
 
     context = {
@@ -75,6 +79,10 @@ def dashboard(request):
         'assurance_count': assurance_count,
         'visite_count': visite_count,
         'carte_count': carte_count,
+        'permis_count': permis_count,
+        'stationnement_count': stationnement_count,
+        'vignette_count': vignette_count,
+        'autorisation_count': autorisation_count,
         'autres_count':autres_count,
         'aujourdhui': aujourdhui,
 

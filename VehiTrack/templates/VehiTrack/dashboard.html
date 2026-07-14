@@ -39,6 +39,10 @@
         <div class="stat-card"><div class="stat-title">ASSURANCES</div><div class="stat-number">{{ assurance_count }}</div></div>
         <div class="stat-card"><div class="stat-title">CONTROL TECH.</div><div class="stat-number">{{ visite_count }}</div></div>
         <div class="stat-card"><div class="stat-title">CARTES ROSE</div><div class="stat-number">{{ carte_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">PERMIS CONDUIRE</div><div class="stat-number">{{ permis_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">STATIONNEMENT</div><div class="stat-number">{{ stationnement_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">VIGNETTE</div><div class="stat-number">{{ vignette_count }}</div></div>
+        <div class="stat-card"><div class="stat-title">AUTO DE TRANSP.</div><div class="stat-number">{{ autorisation_count }}</div></div>
         <div class="stat-card"><div class="stat-title">AUTRES DOCS</div><div class="stat-number">{{ autres_count }}</div></div>
     </div>
 
@@ -57,7 +61,7 @@
                         <td>{% if v.statut == 'valide' %}<span class="badge badge-valide">Valide</span>
                             {% elif v.statut == 'expire_bientot' %}<span class="badge badge-warning">Expire bientôt</span>
                             {% elif v.statut == 'expire' %}<span class="badge badge-expire">Expiré</span>
-                            {% else %}<span class="badge">Aucun</span>{% endif %}
+                            {% else %}<span class="badge badge-expire">Aucun</span>{% endif %}
                         </td>
                     </tr>
                     {% empty %}
@@ -141,17 +145,21 @@
     const assurance = {{ assurance_count|default:0 }};
     const visite = {{ visite_count|default:0 }};
     const carte = {{ carte_count|default:0 }};
+    const permis = {{ permis_count|default:0 }};
+    const stationnement = {{ stationnement_count|default:0 }};
+    const vignette = {{ vignette_count|default:0 }};
+    const autorisation = {{ autorisation_count|default:0 }};
     const autres = {{ autres_count|default:0 }};
 
     // 3. Graphique à barres
     new Chart(document.getElementById('barChartExpiry'), {
         type: 'bar',
         data: {
-            labels: ['Assurances', 'Controls tech.', 'Cartes rose', 'Autres'],
+            labels: ['Assurances', 'Controls tech.', 'Cartes rose','permis', 'stationnement', 'vignette', 'autorisation', 'Autres'],
             datasets: [{
                 label: 'Documents expirant < 30j',
-                data: [assurance, visite, carte, autres],
-                backgroundColor: ['#2c7da0', '#e28743', '#61a5c2', '#9bb7d4'],
+                data: [assurance, visite, carte, permis, stationnement, vignette, autorisation, autres],
+                backgroundColor: ['#2c7da0', '#e28743', '#61a5c2', '#9bb7d4', '#009900', '#FFD700', '#36454F'],
                 borderRadius: 12
             }]
         },
@@ -164,20 +172,22 @@
 
     // 4. Camembert pour les 5 premiers documents expirant
     const typesList = [{% for doc in documents_expirant %}'{{ doc.type_document }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
-    const counts = { assurance: 0, visite_technique: 0, carte_grise: 0, autre: 0 };
+    const counts = { assurance: 0, visite: 0, carte: 0, permis: 0, stationnement: 0, vignette: 0, autorisation: 0,autre: 0 };
     typesList.forEach(t => { if (counts[t] !== undefined) counts[t]++; });
 
     new Chart(document.getElementById('pieExpiringChart'), {
         type: 'pie',
         data: {
-            labels: ['Assurance', 'Visite technique', 'Carte grise', 'Autre'],
+            labels: ['Assurance', 'Controle technique', 'Carte rose', 'Vignette', 'auto de trans', 'Autre'],
             datasets: [{
-                data: [counts.assurance, counts.visite_technique, counts.carte_grise, counts.autre],
-                backgroundColor: ['#f4a261', '#e76f51', '#2a9d8f', '#8ecae6']
+                data: [counts.assurance, counts.visite, counts.carte, permis, stationnement, counts.vignette, autorisation, counts.autre],
+                backgroundColor: ['#e76f51', '#009900', '#FFD700', '#2a9d8f', '#2c7da0']
             }]
         },
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
+
+
 
     // 5. Bouton "Voir tout" pour dévoiler tous les documents récents
 

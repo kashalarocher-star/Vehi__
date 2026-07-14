@@ -24,13 +24,13 @@ class Matricule(models.Model):
     class Meta:
         app_label = 'VehiTrack'
 class Document(models.Model):
-    TYPE_CHOICES = [
-        ('assurence', 'Assurence'),
-        ('visite_technique', 'Visite_technique'),
-        ('carte_grise', 'Carte_grise'),
-        ('autre', 'Autre'),
+    #TYPE_CHOICES = [
+        #('assurence', 'Assurence'),
+        #('visite_technique', 'Visite_technique'),
+        #('carte_grise', 'Carte_grise'),
+        #('autre', 'Autre'),
 
-    ]
+    #]
     TYPE_CHOICE = [
         ('carte rose', 'carte rose'),
         ('permis de conduire', 'permis de conduire'),
@@ -39,6 +39,7 @@ class Document(models.Model):
         ('stationnement', 'stationnement'),
         ('vignette', 'vignette'),
         ('autorisation de transport(patente)', 'autorisation de transport(patente)'),
+        ('autre', 'Autre'),
     ]
     plaque_d_immatricule = models.ForeignKey(Matricule, on_delete=models.CASCADE, related_name="documents", null=True, blank=True)
     titre = models.CharField(max_length=200, choices=TYPE_CHOICE,default='titre du document')
