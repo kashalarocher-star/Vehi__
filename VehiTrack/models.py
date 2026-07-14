@@ -65,7 +65,7 @@ class Document(models.Model):
     def __str__(self):
         if self.plaque_d_immatricule:
             return f"{self.titre} ({self.plaque_d_immatricule.code})"
-        return f"{self.titre} (⚠️ faut mettre une plaque)"
+        return f"{self.titre} (⚠️ faut mettre le numero de la plaque)"
     class Meta:
         app_label = 'VehiTrack'
 class HistoriqueDocument(models.Model):
